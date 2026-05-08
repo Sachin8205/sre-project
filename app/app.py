@@ -2,6 +2,7 @@ from flask import Flask, Response
 from prometheus_client import Counter, generate_latest
 import socket
 import datetime
+import logging
 
 app = Flask(__name__)
 
@@ -9,6 +10,18 @@ REQUEST_COUNT = Counter(
     'app_requests_total',
     'Total App HTTP Request Count'
 )
+
+@app.route("/")
+def home():
+    REQUEST_COUNT.inc()
+
+    app.logger.info("Home endpoint accessed")
+
+    return {
+        "message": "SRE Project Running",
+        "pod": socket.gethostname(),
+        "time": str(datetime.datetime.now())
+    }
 
 @app.route("/")
 def home():
