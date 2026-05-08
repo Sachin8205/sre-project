@@ -1,0 +1,34 @@
+name: SRE CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install Dependencies
+      run: |
+        cd app
+        pip install -r requirements.txt
+
+    - name: Run Python Check
+      run: |
+        cd app
+        python -m py_compile app.py
+
+    - name: Build Docker Image
+      run: |
+        cd app
+        docker build -t sre-app .
