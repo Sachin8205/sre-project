@@ -1,0 +1,16 @@
+groups:
+  - name: sre-alerts
+
+    rules:
+      - alert: AppDown
+
+        expr: up{job="sre-app"} == 0
+
+        for: 1m
+
+        labels:
+          severity: critical
+
+        annotations:
+          summary: "SRE App is DOWN"
+          description: "The sre-app service is not responding."
